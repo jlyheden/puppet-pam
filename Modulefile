@@ -1,7 +1,7 @@
-name 'artisol-template'
+name 'artisol-pam'
 version '0.0.1'
 
-author 'Firstname Lastname'
+author 'Johan Lyheden'
 license ''
 project_page ''
 source ''

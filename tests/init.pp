@@ -1,2 +1,2 @@
-include template
-include template::params
+include pam
+include pam::params

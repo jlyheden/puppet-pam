@@ -1,3 +1,3 @@
-# template #
+# pam #
 
-This is the template module. See init.pp for more documentation
+This is the pam module. See init.pp for more documentation
