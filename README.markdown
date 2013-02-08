@@ -1,0 +1,3 @@
+# template #
+
+This is the template module. It provides...
