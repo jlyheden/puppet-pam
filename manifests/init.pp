@@ -62,7 +62,7 @@
 #
 # === Author
 #
-# Johan Lyheden <johan.lyheden@artificial-solutions.com>
+# Firstname Lastname <firstname.lastname@artificial-solutions.com>
 #
 class template (  $ensure = $template::params::ensure,
                   $service_enable = $template::params::service_enable,

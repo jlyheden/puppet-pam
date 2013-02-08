@@ -11,11 +11,11 @@
     "Modulefile": "b1295ce5cc8e119b4d0727b844c3596b",
     "README.markdown": "50b871a4405b38a87779224fa9f8482f",
     "Rakefile": "f37e6131fe7de9a49b09d31596f5fbf1",
-    "manifests/init.pp": "5b7c7e629435d32999543cdf325c1cfb",
+    "manifests/init.pp": "a88ca8f536d7680aa58595d4ab944d17",
     "manifests/params.pp": "007194f6f2c5d73f329d333f82bf384d",
     "spec/spec.opts": "a600ded995d948e393fbe2320ba8e51c",
     "spec/spec_helper.rb": "3ea886dd135e120afa31e0aab12e85b0",
-    "tests/init.pp": "1ec2c496ec072c332bcfabf074da0621"
+    "tests/init.pp": "23690e8203a815a1f2f51b895ba7215b"
   },
   "dependencies": [
     {
