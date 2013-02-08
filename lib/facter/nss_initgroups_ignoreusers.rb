@@ -4,7 +4,7 @@ Facter.add('nss_initgroups_ignoreusers') do
   setcode do
     ignore_users = `cut -f 1 -d':' /etc/passwd || echo `
     if ignore_users.length > 0
-      ignore_users.gsub(/\n/,',').chomp
+      ignore_users.chomp.gsub(/\n/,',')
     else
       ignore_users
     end
