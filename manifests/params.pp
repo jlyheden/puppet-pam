@@ -26,7 +26,7 @@ class pam::params {
       # base
       $package = [ 'libpam0g', 'libpam-modules', 'libpam-runtime' ]
       # ldap 
-      $ldap_package = 'libpam-ldap'
+      $ldap_package = 'libpam-ldapd'
       $ldap_config = '/etc/ldap.conf'
     }
     default: {
