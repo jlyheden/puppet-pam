@@ -1,14 +1,14 @@
 {
-  "name": "johan-template",
-  "author": "johan",
+  "name": "artisol-template",
+  "author": "Firstname Lastname",
   "description": "",
   "license": "",
   "project_page": "",
   "source": "",
   "summary": "",
-  "version": "",
+  "version": "0.0.1",
   "checksums": {
-    "Modulefile": "b1295ce5cc8e119b4d0727b844c3596b",
+    "Modulefile": "c296f1695d49217d61aa4e56a33c83d6",
     "README.markdown": "50b871a4405b38a87779224fa9f8482f",
     "Rakefile": "f37e6131fe7de9a49b09d31596f5fbf1",
     "manifests/init.pp": "a88ca8f536d7680aa58595d4ab944d17",

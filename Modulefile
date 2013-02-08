@@ -1,7 +1,7 @@
-name 'johan-template'
-version ''
+name 'artisol-template'
+version '0.0.1'
 
-author 'johan'
+author 'Firstname Lastname'
 license ''
 project_page ''
 source ''
