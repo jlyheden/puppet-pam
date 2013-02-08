@@ -24,7 +24,7 @@ class template::params {
       $config_file = '/etc/template.conf'
     }
     default: {
-      fail("Unsupported operatingsystem ${::operatingsystem}")
+      fail("Unsupported distribution ${::lsbdistcodename}")
     }
   }
 
