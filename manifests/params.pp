@@ -27,7 +27,7 @@ class pam::params {
       $package = [ 'libpam0g', 'libpam-modules', 'libpam-runtime' ]
       # ldap 
       $ldap_package = 'libpam-ldap'
-      $ldap_config_file = '/etc/ldap.conf'
+      $ldap_config = '/etc/ldap.conf'
     }
     default: {
       fail("Unsupported distribution ${::lsbdistcodename}")
