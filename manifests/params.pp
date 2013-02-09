@@ -19,6 +19,14 @@ class pam::params {
   $umask = '0022'
   $skel = '/etc/skel'
 
+  # pam access
+  $accessfile = '/etc/security/access.conf'
+  $debug = false
+  $noaudit = false
+  $fieldsep = undef
+  $listsep = undef
+  $nodefgroup = false
+
   # This mandates which distributions are supported
   # To add support for other distributions simply add
   # a matching regex line to the operatingsystem fact
@@ -29,8 +37,10 @@ class pam::params {
       # ldap 
       $ldap_package = 'libpam-ldapd'
       $pam_auth_update_mkhomedir_tmpl = 'pam/pam_auth_update/mkhomedir.erb'
+      $pam_auth_update_access_tmpl = 'pam/pam_auth_update/access.erb'
       $pam_auth_update_dir = '/usr/share/pam-configs'
       $pam_auth_update_mkhomedir_file = "${pam_auth_update_dir}/mkhomedir"
+      $pam_auth_update_access_file "${pam_auth_update_dir}/access"
     }
     default: {
       fail("Unsupported distribution ${::lsbdistcodename}")
