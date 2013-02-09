@@ -74,4 +74,11 @@ class pam ( $ensure = $pam::params::ensure, $autoupgrade = $pam::params::autoupg
     name    => $pam::params::package
   }
 
+  exec { 'pam_auth_update':
+    command     => 'pam-auth-update',
+    path        => [ '/bin', '/sbin', '/usr/bin', '/usr/sbin' ],
+    refreshonly => true,
+    require     => Package['pam']
+  }
+
 }
