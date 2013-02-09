@@ -28,7 +28,7 @@ class pam::params {
       $package = [ 'libpam0g', 'libpam-modules', 'libpam-runtime' ]
       # ldap 
       $ldap_package = 'libpam-ldapd'
-      $pam_auth_update_mkhomedir_tmpl = 'pam/pam_mkhomedir.ubuntu.erb'
+      $pam_auth_update_mkhomedir_tmpl = 'pam/pam_auth_update/mkhomedir.erb'
       $pam_auth_update_dir = '/usr/share/pam-configs'
       $pam_auth_update_mkhomedir_file = "${pam_auth_update_dir}/mkhomedir"
     }
