@@ -10,9 +10,9 @@ This is the Puppet module for managing PAM - Pluggable Authentication Module.
 ## Usage
 
 In it's simplest form, which essentially just make sure that PAM packages
-are installed (which they always are).
+are installed (which they always are)::
 
-@include pam@
+include pam
 
 ### Usage: PAM LDAP
 
