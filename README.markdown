@@ -12,29 +12,29 @@ This is the Puppet module for managing PAM - Pluggable Authentication Module.
 In it's simplest form, which essentially just make sure that PAM packages
 are installed (which they always are)
 
-`include pam`
+	include pam
 
 
 ### Usage: pam ldap
 
-Some sub namespaced classes exists for more specific purposes.
-
 The following installs pam-ldap and configures pam to query LDAP for user logins:
 	
-> include pam::ldap
+	include pam::ldap
 
 
 ### Usage: pam mkhomedir
 
 To enable automatic creation of user home directories:
 
-`include pam::mkhomedir
-# or
-class { 'pam::mkhomedir':
- ensure => present,
- umask  => '0022',
- skel   => '/etc/skel'
-}`
+	include pam::mkhomedir
+
+Or in case you want to override certain default parameters:
+
+	class { 'pam::mkhomedir':
+		ensure => present,
+		umask  => '0022',
+		skel   => '/etc/skel'
+	}
 
 
 ### Usage: pam access
