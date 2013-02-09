@@ -20,8 +20,8 @@ class pam::params {
   $skel = '/etc/skel'
 
   # pam access
-  $access_template = 'pam/security/access.conf.erb'
-  $access_source = undef
+  $access_template = ''
+  $access_source = ''
   $accessfile = '/etc/security/access.conf'
   $debug = false
   $noaudit = false

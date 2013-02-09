@@ -18,13 +18,13 @@ define pam::access::entry ( $object,
     default => fail("Unsupported object_type ${object_type}. Valid values are: user, group")
   }
   $content_real = $object_type ? {
-    'user'  => "${permission} : ${object} : ${origins}\n",
-    'group' => "${permission} : (${object}) : ${origins}\n",
+    'user'  => "${permission_real} : ${object} : ${origins}\n",
+    'group' => "${permission_real} : (${object}) : ${origins}\n",
     default => fail("Unsupported object_type ${object_type}. Valid values are: user, group")
   }
 
   @concat::fragment { $name_real:
-    target  => $pam::access::accessfile_entry,
+    target  => $pam::access::accessfile,
     content => $content_real,
     order   => '20',
     tag     => 'pam_access'

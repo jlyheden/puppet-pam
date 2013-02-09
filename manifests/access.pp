@@ -27,7 +27,7 @@ class pam::access ( $ensure = 'present',
   $accessfile_entry = $accessfile ? {
     undef   => '',
     ''      => '',
-    default => " accessfile='${accessfile}'"
+    default => " accessfile=${accessfile}"
   }
   $debug_entry = $debug ? {
     true    => ' debug',
@@ -58,7 +58,7 @@ class pam::access ( $ensure = 'present',
 
   # Ubuntu uses pam-auth-update to build pam configuration
   case $::lsbdistcodename {
-    ubuntu: {
+    lucid: {
       file { 'pam_auth_update_access_file':
         ensure  => $ensure,
         path    =>$pam::params::pam_auth_update_access_file,
@@ -79,26 +79,25 @@ class pam::access ( $ensure = 'present',
 
       # use fragments if file source not provided
       if $manage_file_source == undef and $manage_file_template == undef {
-        concat { $accessfile_entry:
-          ensure  => $ensure,
+        concat { $accessfile:
           owner   => 'root',
           group   => 'root',
           mode    => '0644'
         }
         concat::fragment { '10_pam_access_conf_head':
-          target  => $accessfile_entry,
+          target  => $accessfile,
           content => "# MANAGED BY PUPPET\n",
           order   => '10'
         }
         concat::fragment { '90_pam_access_conf_foot':
-          target  => $accessfile_entry,
+          target  => $accessfile,
           content => "-:ALL EXCEPT root: ALL\n",
           order   => '90'
         }
         Concat::Fragment <| tag == 'pam_access' |>
       # otherwise manage file as usual
       } else {
-        file { $accessfile_entry:
+        file { $accessfile:
           ensure  => present,
           owner   => 'root',
           group   => 'root',
