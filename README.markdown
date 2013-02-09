@@ -12,8 +12,8 @@ This is the Puppet module for managing PAM - Pluggable Authentication Module.
 In it's simplest form, which essentially just make sure that PAM packages
 are installed (which they always are)
 
-:::python
-	include pam
+    :::python
+        include pam
 
 ### Usage: PAM LDAP
 
