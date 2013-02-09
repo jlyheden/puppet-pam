@@ -47,7 +47,7 @@ class pam::access ( $ensure = 'present',
   $listsep_entry = $listsep ? {
     undef   => '',
     ''      => '',
-    default => " listsep='${listsep}"
+    default => " listsep='${listsep}'"
   }
   $nodefgroup_entry = $nodefgroup ? {
     true    => ' nodefgroup',
