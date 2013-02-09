@@ -13,7 +13,8 @@ In it's simplest form, which essentially just make sure that PAM packages
 are installed (which they always are)
 
     :::puppet
-        include pam
+    include pam
+
 
 ### Usage: PAM LDAP
 
