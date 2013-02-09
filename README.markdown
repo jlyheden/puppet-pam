@@ -41,22 +41,24 @@ Or in case you want to override certain default parameters:
 
 To control server access via the PAM access module:
 
-> include pam::access
-> # or
-> class { 'pam::access':
->   ensure     => present,
->   accessfile => '/etc/security/access.conf',
->   debug      => true,
->   listsep    => ',',
-> }
+	include pam::access
+
+Or if you want to modify certain default settings:
+
+	class { 'pam::access':
+		ensure     => present,
+		accessfile => '/etc/security/access.conf',
+		debug      => true,
+		listsep    => ',',
+	}
 
 To manage individual access entries in access.conf:
 
-> pam::access::entry { 'allow_domain_users_group':
->   ensure      => present,
->   object      => 'Domain Users',
->   object_type => 'group',
->   permission  => 'allow',
->   origins     => 'ALL',
-> }
+	pam::access::entry { 'allow_domain_users_group':
+		ensure      => present,
+		object      => 'Domain Users',
+		object_type => 'group',
+		permission  => 'allow',
+		origins     => 'ALL',
+	}
 
