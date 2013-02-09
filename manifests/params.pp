@@ -15,9 +15,6 @@ class pam::params {
   $source_dir = undef
   $source_dir_purge = undef
 
-  # ldap
-  $ldap_template = 'pam/ldap.conf.erb'
-
   # This mandates which distributions are supported
   # To add support for other distributions simply add
   # a matching regex line to the operatingsystem fact
@@ -27,7 +24,6 @@ class pam::params {
       $package = [ 'libpam0g', 'libpam-modules', 'libpam-runtime' ]
       # ldap 
       $ldap_package = 'libpam-ldapd'
-      $ldap_config = '/etc/ldap.conf'
     }
     default: {
       fail("Unsupported distribution ${::lsbdistcodename}")

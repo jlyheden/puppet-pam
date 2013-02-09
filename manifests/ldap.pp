@@ -14,18 +14,6 @@
 #   If Puppet should upgrade the software automatically
 #   Valid values: <tt>true</tt>, <tt>false</tt>
 #
-# [*source*]
-#   Path to static Puppet file to use
-#   Valid values: <tt>puppet:///modules/mymodule/path/to/file.conf</tt>
-#
-# [*template*]
-#   Path to ERB puppet template file to use
-#   Valid values: <tt>mymodule/path/to/file.conf.erb</tt>
-#
-# [*parameters*]
-#   Hash variable to pass to template
-#   Valid values: hash, ex:  <tt>{ 'option' => 'value' }</tt>
-#
 # === Sample Usage
 #
 # * Installing with default settings
@@ -46,16 +34,11 @@
 #
 # Johan Lyheden <johan.lyheden@artificial-solutions.com>
 #
-class pam::ldap ( $ensure = $pam::params::ensure,
-                  $autoupgrade = $pam::params::autoupgrade,
-                  $source = $pam::params::ldap_source,
-                  $template = $pam::params::ldap_template,
-                  $parameters = {} ) inherits pam::params {
+class pam::ldap ( $ensure = $pam::params::ensure, $autoupgrade = $pam::params::autoupgrade ) inherits pam::params {
 
   # Input validation
   validate_re($ensure,[ 'present', 'absent', 'purge' ])
   validate_bool($autoupgrade)
-  validate_hash($parameters)
 
   # Manages automatic upgrade behavior
   if $ensure == 'present' and $autoupgrade == true {
@@ -72,18 +55,6 @@ class pam::ldap ( $ensure = $pam::params::ensure,
         Package['pamldap'] { ensure => latest }
       } else {
         Package['pamldap'] { ensure => present }
-      }
-      if $source == undef {
-        File['pamldap/config'] { content => template($template) }
-      } else {
-        File['pamldap/config'] { source => $source }
-      }
-      file { 'pamldap/config':
-        ensure  => present,
-        path    => $pam::params::ldap_config,
-        owner   => root,
-        group   => root,
-        mode    => '0644',
       }
     }
     
