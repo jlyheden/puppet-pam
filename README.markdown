@@ -7,12 +7,13 @@ This is the Puppet module for managing PAM - Pluggable Authentication Module.
 * puppet-concat: https://github.com/ripienaar/puppet-concat
 * puppet-stdlib: https://github.com/puppetlabs/puppetlabs-stdlib
 
-## Usage: pam
+### Usage: pam
 
 In it's simplest form, which essentially just make sure that PAM packages
 are installed (which they always are)
 
-> include pam
+`include pam`
+
 
 ### Usage: pam ldap
 
@@ -22,17 +23,19 @@ The following installs pam-ldap and configures pam to query LDAP for user logins
 	
 > include pam::ldap
 
+
 ### Usage: pam mkhomedir
 
 To enable automatic creation of user home directories:
 
-> include pam::mkhomedir
-> # or
-> class { 'pam::mkhomedir':
->  ensure => present,
->  umask  => '0022',
->  skel   => '/etc/skel'
-> }
+`include pam::mkhomedir
+# or
+class { 'pam::mkhomedir':
+ ensure => present,
+ umask  => '0022',
+ skel   => '/etc/skel'
+}`
+
 
 ### Usage: pam access
 
