@@ -42,7 +42,7 @@ class pam::params {
       $pam_auth_update_access_tmpl = 'pam/pam_auth_update/access.erb'
       $pam_auth_update_dir = '/usr/share/pam-configs'
       $pam_auth_update_mkhomedir_file = "${pam_auth_update_dir}/mkhomedir"
-      $pam_auth_update_access_file "${pam_auth_update_dir}/access"
+      $pam_auth_update_access_file = "${pam_auth_update_dir}/access"
     }
     default: {
       fail("Unsupported distribution ${::lsbdistcodename}")
