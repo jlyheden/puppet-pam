@@ -1,3 +1,76 @@
+# == Class: pam::access
+#
+# This module manages the pam_access.so module for PAM.
+# It grants the ability to allow or deny certain users
+# or groups to authenticate to the system.
+#
+# If you use this class without passing an explicit
+# access.conf configuration file via the template
+# or source parameter, it is recommended to complement
+# access via the define pam::access::entry
+#
+# === Parameters
+#
+# [*ensure*]
+#   Controls the software installation
+#   Valid values: <tt>present</tt>, <tt>absent</tt>, <tt>purge</tt>
+#
+# [*accessfile*]
+#   Path to access.conf
+#   Valid values: <tt>/path/to/access.conf</tt>
+#
+# [*debug*]
+#   A lot of debug information is printed with syslog(3)
+#   Valid values: <tt>true</tt>,<tt>false</tt>
+#
+# [*noaudit*]
+#   Do not report logins from disallowed hosts and ttys to the audit subsystem
+#   Valid values: <tt>true</tt>,<tt>false</tt>
+#
+# [*fieldsep*]
+#   This option modifies the field separator character that pam_access will recognize when parsing the access configuration file
+#   Valid values: <tt>sep character</tt> ex: <tt>,</tt>
+#
+# [*listsep*]
+#   This option modifies the list separator character that pam_access will recognize when parsing the access configuration file
+#   Valid values: <tt>sep character</tt> ex: <tt>,</tt>
+#
+# [*nodefgroup*]
+#   User tokens which are not enclosed in parentheses will not be matched against the group database
+#   Valid values: <tt>true</tt>,<tt>false</tt>
+#
+# [*source*]
+#   Path to static Puppet file to use
+#   Valid values: <tt>puppet:///modules/mymodule/path/to/file.conf</tt>
+#
+# [*template*]
+#   Path to ERB puppet template file to use
+#   Valid values: <tt>mymodule/path/to/file.conf.erb</tt>
+#
+# [*parameters*]
+#   Hash variable to pass to template (if used)
+#   Valid values: hash, ex:  <tt>{ 'option' => 'value' }</tt>
+#
+# === Sample Usage
+#
+# * Installing with default settings
+#   class { 'pam::access': }
+#
+# * Uninstalling the software
+#   class { 'pam::access': ensure => absent }
+#
+# === Supported platforms
+#
+# This module has been tested on the following platforms
+# * Ubuntu LTS 10.04
+#
+# To add support for other platforms, edit the params.pp file and provide
+# settings for that platform.
+#
+# === Author
+#
+# Johan Lyheden <johan.lyheden@artificial-solutions.com>
+#
 class pam::access ( $ensure = 'present',
                     $accessfile = $pam::params::accessfile,
                     $debug = $pam::params::debug,
@@ -6,12 +79,14 @@ class pam::access ( $ensure = 'present',
                     $listsep = $pam::params::listsep,
                     $nodefgroup = $pam::params::nodefgroup,
                     $source = $pam::params::access_source,
-                    $template = $pam::params::access_template ) inherits pam::params {
+                    $template = $pam::params::access_template,
+                    $parameters = {} ) inherits pam::params {
 
   include pam
 
   # Input validation
   validate_re($ensure, [ 'present', 'absent' ])
+  validate_hash($parameters)
 
   $manage_file_source = $source ? {
     ''        => undef,
