@@ -1,18 +1,20 @@
-# Module: pam #
+# Module: pam
 
 This is the Puppet module for managing PAM - Pluggable Authentication Module.
 
-## Dependencies ##
+## Dependencies
 
 * puppet-concat: https://github.com/ripienaar/puppet-concat
 * puppet-stdlib: https://github.com/puppetlabs/puppetlabs-stdlib
 
-## Usage ##
+## Usage
 
 In it's simplest form, which essentially just make sure that PAM packages
-are installed (which they always are):
-	:::puppet
-		include pam
+are installed (which they always are).
+
+@include pam@
+
+### Usage: PAM LDAP
 
 Some sub namespaced classes exists for more specific purposes.
 
