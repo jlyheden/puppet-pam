@@ -99,7 +99,7 @@ class pam::access ( $ensure = 'present',
 
   # Sanitized string builder variables
   # for pam_access.so options
-  $listsep_entry = $listsep ? {
+  $listsep_entry_real = $listsep ? {
     undef   => ' ',
     default => $listsep
   }
@@ -170,7 +170,7 @@ class pam::access ( $ensure = 'present',
         }
         concat::fragment { '90_pam_access_conf_foot':
           target  => $accessfile,
-          content => "-:ALL${listsep_entry}EXCEPT${listsep_entry}root:ALL\n",
+          content => "-:ALL${listsep_entry_real}EXCEPT${listsep_entry_real}root:ALL\n",
           order   => '90'
         }
         Concat::Fragment <| tag == 'pam_access' |>
