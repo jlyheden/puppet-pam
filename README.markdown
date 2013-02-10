@@ -9,15 +9,16 @@ This is the Puppet module for managing PAM - Pluggable Authentication Module.
 
 ### Usage: pam
 
-In it's simplest form, which essentially just make sure that PAM packages
-are installed (which they always are)
+The base pam module is not particularly useful, it ensures that the
+base pam packages are installed - which they are by default anyway.
 
 	include pam
 
 
 ### Usage: pam ldap
 
-The following installs pam-ldap and configures pam to query LDAP for user logins:
+To install the ldap pam packages and enable them in the system pam
+configuration section:
 	
 	include pam::ldap
 
@@ -28,7 +29,7 @@ To enable automatic creation of user home directories:
 
 	include pam::mkhomedir
 
-Or in case you want to override certain default parameters:
+Custom settings can be provided for umask and skeleton directory:
 
 	class { 'pam::mkhomedir':
 		ensure => present,
@@ -43,7 +44,9 @@ To control server access via the PAM access module:
 
 	include pam::access
 
-Or if you want to modify certain default settings:
+Custom settings can be applied, like delimiter character (which
+is useful when handling groups with whitespaces - Domain Admins
+for example), and other settings. See access.pp for details:
 
 	class { 'pam::access':
 		ensure     => present,
