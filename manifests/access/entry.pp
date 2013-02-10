@@ -64,8 +64,8 @@ define pam::access::entry ( $object,
     default => fail("Unsupported object_type ${object_type}. Valid values are: user, group")
   }
   $content_real = $object_type ? {
-    'user'  => "${permission_real} : ${object} : ${origins}\n",
-    'group' => "${permission_real} : (${object}) : ${origins}\n",
+    'user'  => "${permission_real}:${object}:${origins}\n",
+    'group' => "${permission_real}:(${object}):${origins}\n",
     default => fail("Unsupported object_type ${object_type}. Valid values are: user, group")
   }
 
