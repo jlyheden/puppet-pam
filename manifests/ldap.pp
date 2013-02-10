@@ -47,29 +47,8 @@ class pam::ldap ( $ensure = $pam::params::ensure, $autoupgrade = $pam::params::a
     $ensure_package = $ensure
   }
 
-  case $ensure {
-
-    # If software should be installed
-    present: {
-      if $autoupgrade == true {
-        Package['pamldap'] { ensure => latest }
-      } else {
-        Package['pamldap'] { ensure => present }
-      }
-    }
-    
-    # If software should be uninstalled
-    absent,purge: {
-      Package['pamldap'] { ensure => $ensure }
-    }
-    
-    # Catch all, should not end up here due to input validation
-    default: {
-      fail("Unsupported ensure value ${ensure}")
-    }
-  }
-  
   package { 'pamldap':
+    ensure  => $ensure_package,
     name    => $pam::params::ldap_package
   }
 
