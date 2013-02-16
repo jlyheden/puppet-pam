@@ -33,7 +33,7 @@ class pam::params {
   # To add support for other distributions simply add
   # a matching regex line to the operatingsystem fact
   case $::lsbdistcodename {
-    lucid: {
+    'precise','lucid': {
       # base
       $package = [ 'libpam0g', 'libpam-modules', 'libpam-runtime' ]
       # ldap 
