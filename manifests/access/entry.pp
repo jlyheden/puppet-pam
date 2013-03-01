@@ -24,7 +24,7 @@
 #
 # [*origins*]
 #   A list of one or more tty names (for non-networked logins), host names, domain names (begin with "."),
-#   host addresses, internet network numbers (end with "."), internet network addresses 
+#   host addresses, internet network numbers (end with "."), internet network addresses
 #   with network mask (where network mask can be a decimal number or
 #   an internet address also), ALL (which always matches) or LOCAL.
 #   Valid values: see above
