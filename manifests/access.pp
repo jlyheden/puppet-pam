@@ -71,67 +71,104 @@
 #
 # Johan Lyheden <johan.lyheden@artificial-solutions.com>
 #
-class pam::access ( $ensure = 'present',
-                    $accessfile = $pam::params::accessfile,
-                    $debug = $pam::params::debug,
-                    $noaudit = $pam::params::noaudit,
-                    $fieldsep = $pam::params::fieldsep,
-                    $listsep = $pam::params::listsep,
-                    $nodefgroup = $pam::params::nodefgroup,
-                    $source = $pam::params::access_source,
-                    $template = $pam::params::access_template,
-                    $parameters = {} ) inherits pam::params {
+class pam::access (
+  $ensure     = 'present',
+  $accessfile = 'UNDEF',
+  $debug      = 'UNDEF',
+  $noaudit    = 'UNDEF',
+  $fieldsep   = 'UNDEF',
+  $listsep    = 'UNDEF',
+  $nodefgroup = 'UNDEF',
+  $source     = 'UNDEF',
+  $template   = 'UNDEF',
+  $parameters = {}
+) {
 
   include pam
+  include pam::params
+
+  # puppet 2.6 compatibility
+  $accessfile_real = $accessfile ? {
+    'UNDEF' => $pam::params::accessfile,
+    default => $accessfile
+  }
+  $debug_real = $debug ? {
+    'UNDEF' => $pam::params::debug,
+    default => $debug
+  }
+  $noaudit_real = $noaudit ? {
+    'UNDEF' => $pam::params::noaudit,
+    default => $noaudit
+  }
+  $fieldsep_real = $fieldsep ? {
+    'UNDEF' => $pam::params::fieldsep,
+    default => $fieldsep
+  }
+  $listsep_real = $listsep ? {
+    'UNDEF' => $pam::params::listsep,
+    default => $listsep
+  }
+  $nodefgroup_real = $nodefgroup ? {
+    'UNDEF' => $pam::params::nodefgroup,
+    default => $nodefgroup
+  }
+  $source_real = $source ? {
+    'UNDEF' => $pam::params::access_source,
+    default => $source,
+  }
+  $template_real = $template ? {
+    'UNDEF' => $pam::params::access_template,
+    default => $template
+  }
 
   # Input validation
   validate_re($ensure, [ 'present', 'absent' ])
   validate_hash($parameters)
 
-  $manage_file_source = $source ? {
+  $manage_file_source = $source_real ? {
     ''        => undef,
-    default   => $source,
+    default   => $source_real,
   }
-  $manage_file_content = $template ? {
+  $manage_file_content = $template_real ? {
     ''        => undef,
-    default   => template($template),
+    default   => template($template_real),
   }
 
   # Sanitized string builder variables
   # for pam_access.so options
-  $listsep_entry_real = $listsep ? {
+  $listsep_entry_real = $listsep_real ? {
     undef   => ' ',
-    default => $listsep
+    default => $listsep_real
   }
-  $accessfile_entry = $accessfile ? {
+  $accessfile_entry = $accessfile_real ? {
     undef   => '',
     ''      => '',
-    default => " accessfile=${accessfile}"
+    default => " accessfile=${accessfile_real}"
   }
-  $debug_entry = $debug ? {
+  $debug_entry = $debug_real ? {
     true    => ' debug',
     false   => '',
-    default => fail("Unsupported debug value ${debug}")
+    default => fail("Unsupported debug value ${debug_real}")
   }
-  $noaudit_entry = $noaudit ? {
+  $noaudit_entry = $noaudit_real ? {
     true    => ' noaudit',
     false   => '',
-    default => fail("Unsupported noaudit value ${noaudit}")
+    default => fail("Unsupported noaudit value ${noaudit_real}")
   }
-  $fieldsep_entry = $fieldsep ? {
+  $fieldsep_entry = $fieldsep_real ? {
     undef   => '',
     ''      => '',
-    default => " fieldsep='${fieldsep}'"
+    default => " fieldsep='${fieldsep_real}'"
   }
-  $listsep_entry = $listsep ? {
+  $listsep_entry = $listsep_real ? {
     undef   => '',
     ''      => '',
-    default => " listsep='${listsep}'"
+    default => " listsep='${listsep_real}'"
   }
-  $nodefgroup_entry = $nodefgroup ? {
+  $nodefgroup_entry = $nodefgroup_real ? {
     true    => ' nodefgroup',
     false   => '',
-    default => fail("Unsupported nodefgroup value ${nodefgroup}")
+    default => fail("Unsupported nodefgroup value ${nodefgroup_real}")
   }
   $pam_access_parameters = "${accessfile_entry}${debug_entry}${noaudit_entry}${fieldsep_entry}${listsep_entry}${nodefgroup_entry}"
 
@@ -140,7 +177,7 @@ class pam::access ( $ensure = 'present',
     lucid: {
       file { 'pam_auth_update_access_file':
         ensure  => $ensure,
-        path    =>$pam::params::pam_auth_update_access_file,
+        path    => $pam::params::pam_auth_update_access_file,
         owner   => root,
         group   => root,
         mode    => '0644',
@@ -155,29 +192,29 @@ class pam::access ( $ensure = 'present',
 
   case $ensure {
     present: {
-
       # use fragments if file source not provided
       if $manage_file_source == undef and $manage_file_template == undef {
-        concat { $accessfile:
+        concat { $accessfile_real:
           owner   => 'root',
           group   => 'root',
           mode    => '0644'
         }
         concat::fragment { '10_pam_access_conf_head':
-          target  => $accessfile,
+          target  => $accessfile_real,
           content => "# MANAGED BY PUPPET\n",
           order   => '10'
         }
         concat::fragment { '90_pam_access_conf_foot':
-          target  => $accessfile,
+          target  => $accessfile_real,
           content => "-:ALL${listsep_entry_real}EXCEPT${listsep_entry_real}root:ALL\n",
           order   => '90'
         }
         Concat::Fragment <| tag == 'pam_access' |>
       # otherwise manage file as usual
       } else {
-        file { $accessfile:
+        file { 'accessfile':
           ensure  => present,
+          path    => $accessfile_real,
           owner   => 'root',
           group   => 'root',
           mode    => '0644',
@@ -185,7 +222,6 @@ class pam::access ( $ensure = 'present',
           source  => $manage_file_source
         }
       }
-
     }
     default: {} # leave files as is in any other case
   }
