@@ -36,7 +36,7 @@ class pam::params {
     'precise','lucid': {
       # base
       $package = [ 'libpam0g', 'libpam-modules', 'libpam-runtime' ]
-      # ldap 
+      # ldap
       $ldap_package = 'libpam-ldapd'
       $pam_auth_update_mkhomedir_tmpl = 'pam/pam_auth_update/mkhomedir.erb'
       $pam_auth_update_access_tmpl = 'pam/pam_auth_update/access.erb'
