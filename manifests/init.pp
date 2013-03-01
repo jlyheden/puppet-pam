@@ -41,6 +41,7 @@ class pam (
 ) {
 
   include pam::params
+
   # Input validation
   $ensure_real = $ensure ? {
     'UNDEF' => $pam::params::ensure,
