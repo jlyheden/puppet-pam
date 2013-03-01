@@ -35,42 +35,34 @@
 #
 # Johan Lyheden <johan.lyheden@artificial-solutions.com>
 #
-class pam ( $ensure = $pam::params::ensure, $autoupgrade = $pam::params::autoupgrade ) inherits pam::params {
+class pam (
+  $ensure       = 'UNDEF',
+  $autoupgrade  = 'UNDEF',
+) {
 
+  include pam::params
   # Input validation
-  validate_re($ensure,[ 'present', 'absent', 'purge' ])
-  validate_bool($autoupgrade)
+  $ensure_real = $ensure ? {
+    'UNDEF' => $pam::params::ensure,
+    default => $ensure
+  }
+  $autoupgrade_real = $autoupgrade ? {
+    'UNDEF' => $pam::params::autoupgrade,
+    default => $autoupgrade
+  }
+  $valid_ensure_values = [ 'present', 'absent', 'purge' ]
+  validate_re($ensure_real, $valid_ensure_values)
+  validate_bool($autoupgrade_real)
 
   # Manages automatic upgrade behavior
-  if $ensure == 'present' and $autoupgrade == true {
+  if $ensure_real == 'present' and $autoupgrade_real == true {
     $ensure_package = 'latest'
   } else {
-    $ensure_package = $ensure
+    $ensure_package = $ensure_real
   }
 
-  case $ensure {
-
-    # If software should be installed
-    present: {
-      if $autoupgrade == true {
-        Package['pam'] { ensure => latest }
-      } else {
-        Package['pam'] { ensure => present }
-      }
-    }
-    
-    # If software should be uninstalled
-    absent,purge: {
-      Package['pam'] { ensure => $ensure }
-    }
-    
-    # Catch all, should not end up here due to input validation
-    default: {
-      fail("Unsupported ensure value ${ensure}")
-    }
-  }
-  
   package { 'pam':
+    ensure  => $ensure_package,
     name    => $pam::params::package
   }
 
