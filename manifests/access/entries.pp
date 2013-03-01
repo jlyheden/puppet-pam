@@ -5,7 +5,7 @@
 # resources from hiera, as data can be declared using a
 # centrally managed entry point and without explicitly
 # calling hiera_hash() in site modules.
-# 
+#
 # === Parameters
 #
 # [*parameters*]
@@ -51,9 +51,10 @@
 #
 # Johan Lyheden <johan.lyheden@artificial-solutions.com>
 #
-class pam::access::entries ( $parameters = {} ) inherits pam::params {
+class pam::access::entries ( $parameters = {} ) {
 
   include pam
+  include pam::params
 
   create_resources('pam::access::entry',$parameters)
 
