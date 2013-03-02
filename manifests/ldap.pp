@@ -14,6 +14,11 @@
 #   If Puppet should upgrade the software automatically
 #   Valid values: <tt>true</tt>, <tt>false</tt>
 #
+# [*source*]
+#   Path to Puppet source file for Debuntu pam auth
+#   configuration file.
+#   Valid values: <tt>puppet:///modules/mymodule/myfile</tt>
+#
 # === Sample Usage
 #
 # * Installing with default settings
@@ -32,7 +37,8 @@
 #
 class pam::ldap (
   $ensure       = 'UNDEF',
-  $autoupgrade  = 'UNDEF'
+  $autoupgrade  = 'UNDEF',
+  $source       = 'UNDEF'
 ) {
 
   include pam::params
@@ -45,6 +51,29 @@ class pam::ldap (
   $autoupgrade_real = $autoupgrade ? {
     'UNDEF' => $pam::params::autoupgrade,
     default => $autoupgrade
+  }
+  $source_real = $source ? {
+    'UNDEF' => $pam::params::pam_auth_update_ldap_source,
+    default => $source
+  }
+
+  # Debuntu uses pam-auth-update to build pam configuration
+  case $::operatingsystem {
+    'Ubuntu', 'Debian': {
+      file { 'pam_auth_update_ldap_file':
+        ensure  => $ensure,
+        path    => $pam::params::pam_auth_update_ldap_file,
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0644',
+        source  => $source_real,
+        notify  => Exec['pam_auth_update'],
+        require => Package['pamldap']
+      }
+    }
+    default: {
+      fail("Unsupported operatingsystem ${::operatingsystem}")
+    }
   }
 
   # Input validation

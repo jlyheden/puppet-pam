@@ -51,6 +51,7 @@ class pam::params {
       $package = [ 'libpam0g', 'libpam-modules', 'libpam-runtime' ]
       # ldap
       $ldap_package = 'libpam-ldapd'
+      $pam_auth_update_ldap_source = 'puppet:///modules/pam/pam-configs/ldap'
       $pam_auth_update_mkhomedir_tmpl = 'pam/pam_auth_update/mkhomedir.erb'
       $pam_auth_update_access_tmpl = 'pam/pam_auth_update/access.erb'
       $pam_auth_update_limits_tmpl = 'pam/pam_auth_update/limits.erb'
@@ -58,6 +59,7 @@ class pam::params {
       $pam_auth_update_mkhomedir_file = "${pam_auth_update_dir}/mkhomedir"
       $pam_auth_update_access_file = "${pam_auth_update_dir}/access"
       $pam_auth_update_limits_file = "${pam_auth_update_dir}/limits"
+      $pam_auth_update_ldap_file = "${pam_auth_update_dir}/ldap"
     }
     default: {
       fail("Unsupported operatingsystem ${::operatingsystem}")
