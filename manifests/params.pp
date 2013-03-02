@@ -30,6 +30,18 @@ class pam::params {
   $nodefgroup = false
   $access_restrictive = false   # if block all users except root should be added by default in pam::access
 
+  # pam limits
+  $limits_conf = '/etc/security/limits.conf'
+  $limits_conf_d = '/etc/security/limits.d'
+  $limits_change_uid = false
+  $limits_debug = false
+  $limits_noaudit = false
+  $limits_utmp_early = false
+  $limits_source = 'puppet:///modules/pam/limits.conf'
+  $limits_source_d = ''
+  $limits_template = ''
+  $limits_purge_conf_d = true
+
   # This mandates which distributions are supported
   # To add support for other distributions simply add
   # a matching regex line to the operatingsystem fact
@@ -41,9 +53,11 @@ class pam::params {
       $ldap_package = 'libpam-ldapd'
       $pam_auth_update_mkhomedir_tmpl = 'pam/pam_auth_update/mkhomedir.erb'
       $pam_auth_update_access_tmpl = 'pam/pam_auth_update/access.erb'
+      $pam_auth_update_limits_tmpl = 'pam/pam_auth_update/limits.erb'
       $pam_auth_update_dir = '/usr/share/pam-configs'
       $pam_auth_update_mkhomedir_file = "${pam_auth_update_dir}/mkhomedir"
       $pam_auth_update_access_file = "${pam_auth_update_dir}/access"
+      $pam_auth_update_limits_file = "${pam_auth_update_dir}/limits"
     }
     default: {
       fail("Unsupported operatingsystem ${::operatingsystem}")
