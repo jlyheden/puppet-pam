@@ -36,17 +36,29 @@
 # To add support for other platforms, edit the params.pp file and provide
 # settings for that platform.
 #
-# === Author
-#
-# Johan Lyheden <johan.lyheden@artificial-solutions.com>
-#
-class pam::mkhomedir (  $ensure = 'present',
-                        $umask = $pam::params::umask,
-                        $skel = $pam::params::skel ) inherits pam::params {
+class pam::mkhomedir (
+  $ensure = 'present',
+  $umask = $pam::params::umask,
+  $skel = $pam::params::skel
+) {
 
   include pam
+  include pam::params
 
-  validate_re($ensure, [ 'present', 'absent' ])
+  # puppet 2.6 compatibility
+  $umask_real = $umask ? {
+    'UNDEF' => $pam::params::umask,
+    default => $umask
+  }
+  $skel_rel = $skel ? {
+    'UNDEF' => $pam::params::skel,
+    default => $skel
+  }
+
+  # input validation
+  $valid_ensure_values = [ 'present', 'absent' ]
+  validate_re($ensure, $valid_ensure_values)
+  validate_re($umask_real, /^[0-4][0-7]{3}$/)
 
   file { 'pam_auth_update_mkhomedir_file':
     ensure  => $ensure,
