@@ -121,6 +121,9 @@ class pam::access (
   $valid_ensure_values = [ 'present', 'absent' ]
   validate_re($ensure, $valid_ensure_values)
   validate_hash($parameters)
+  validate_bool($debug_real)
+  validate_bool($noaudit_real)
+  validate_bool($nodefgroup_real)
 
   $manage_file_source = $source_real ? {
     ''        => undef,
@@ -145,12 +148,10 @@ class pam::access (
   $debug_entry = $debug_real ? {
     true    => ' debug',
     false   => '',
-    default => fail("Unsupported debug value ${debug_real}")
   }
   $noaudit_entry = $noaudit_real ? {
     true    => ' noaudit',
     false   => '',
-    default => fail("Unsupported noaudit value ${noaudit_real}")
   }
   $fieldsep_entry = $fieldsep_real ? {
     undef   => '',
@@ -165,7 +166,6 @@ class pam::access (
   $nodefgroup_entry = $nodefgroup_real ? {
     true    => ' nodefgroup',
     false   => '',
-    default => fail("Unsupported nodefgroup value ${nodefgroup_real}")
   }
   $pam_access_parameters = "${accessfile_entry}${debug_entry}${noaudit_entry}${fieldsep_entry}${listsep_entry}${nodefgroup_entry}"
 
@@ -220,7 +220,16 @@ class pam::access (
         }
       }
     }
-    default: {} # leave files as is in any other case
+    default: {
+      # Don't know how to best unmanage the access.conf file
+      # This section would 'reset' it in case it
+      # finds # MANAGED BY PUPPET in the file
+      exec { 'insert_blank_access_conf_file':
+        command => "echo '## UNMANAGED FILE' > ${accessfile_real}",
+        onlyif  => "grep '^# MANAGED BY PUPPET ${accessfile_real} >/dev/null",
+        path    => [ '/bin', '/sbin', '/usr/bin', '/usr/sbin' ]
+      }
+    }
   }
 
 }
