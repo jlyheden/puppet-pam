@@ -38,8 +38,8 @@
 #
 class pam::mkhomedir (
   $ensure = 'present',
-  $umask = $pam::params::umask,
-  $skel = $pam::params::skel
+  $umask  = 'UNDEF',
+  $skel   = 'UNDEF'
 ) {
 
   include pam
@@ -50,7 +50,7 @@ class pam::mkhomedir (
     'UNDEF' => $pam::params::umask,
     default => $umask
   }
-  $skel_rel = $skel ? {
+  $skel_real = $skel ? {
     'UNDEF' => $pam::params::skel,
     default => $skel
   }
@@ -58,11 +58,11 @@ class pam::mkhomedir (
   # input validation
   $valid_ensure_values = [ 'present', 'absent' ]
   validate_re($ensure, $valid_ensure_values)
-  validate_re($umask_real, /^[0-4][0-7]{3}$/)
+  validate_re($umask_real, '^[0-4][0-7]{3}$')
 
-  # Ubuntu uses pam-auth-update to build pam configuration
-  case $::lsbdistcodename {
-    lucid: {
+  # Debuntu uses pam-auth-update to build pam configuration
+  case $::operatingsystem {
+    'Ubuntu', 'Debian': {
       file { 'pam_auth_update_mkhomedir_file':
         ensure  => $ensure,
         path    => $pam::params::pam_auth_update_mkhomedir_file,
@@ -74,7 +74,7 @@ class pam::mkhomedir (
       }
     }
     default: {
-      fail("Unsupported distribution ${::lsbdistcodename}")
+      fail("Unsupported operatingsystem ${::operatingsystem}")
     }
   }
 
