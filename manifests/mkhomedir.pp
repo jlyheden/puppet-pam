@@ -60,14 +60,22 @@ class pam::mkhomedir (
   validate_re($ensure, $valid_ensure_values)
   validate_re($umask_real, /^[0-4][0-7]{3}$/)
 
-  file { 'pam_auth_update_mkhomedir_file':
-    ensure  => $ensure,
-    path    => $pam::params::pam_auth_update_mkhomedir_file,
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0644',
-    content => template($pam::params::pam_auth_update_mkhomedir_tmpl),
-    notify  => Exec['pam_auth_update']
+  # Ubuntu uses pam-auth-update to build pam configuration
+  case $::lsbdistcodename {
+    lucid: {
+      file { 'pam_auth_update_mkhomedir_file':
+        ensure  => $ensure,
+        path    => $pam::params::pam_auth_update_mkhomedir_file,
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0644',
+        content => template($pam::params::pam_auth_update_mkhomedir_tmpl),
+        notify  => Exec['pam_auth_update']
+      }
+    }
+    default: {
+      fail("Unsupported distribution ${::lsbdistcodename}")
+    }
   }
 
 }
