@@ -2,17 +2,18 @@ require 'spec_helper'
 
 describe 'pam::access' do
 
+  # set depending facts
+  let (:facts) { {
+    :operatingsystem  => 'Ubuntu',
+    :concat_basedir   => '/var/lib/puppet/concat'
+  } } 
+
   let (:pre_condition) do [
     'class {"pam": }',
   ]
   end
 
-  context 'ubuntu lucid defaults' do
-    let (:facts) { {
-      :lsbdistcodename  => 'lucid',
-      :operatingsystem  => 'Ubuntu',
-      :concat_basedir   => '/var/lib/puppet/concat'
-    } }
+  context 'with default params' do
     it do should contain_file('pam_auth_update_access_file').with(
       'ensure'  => 'present',
       'path'    => '/usr/share/pam-configs/access',
@@ -37,12 +38,7 @@ describe 'pam::access' do
     end
   end
 
-  context 'ubuntu lucid custom parameters' do
-    let (:facts) { {
-      :lsbdistcodename  => 'lucid',
-      :operatingsystem  => 'Ubuntu',
-      :concat_basedir   => '/var/lib/puppet/concat'
-    } }
+  context "with fieldsep => ',' debug => true accessfile => /custom/accessfile" do
     let (:params) { {
       :fieldsep   => ',',
       :debug      => true,
@@ -64,12 +60,7 @@ describe 'pam::access' do
     end
   end
 
-  context 'ubuntu lucid sourced accessfile' do
-    let (:facts) { {
-      :lsbdistcodename  => 'lucid',
-      :operatingsystem  => 'Ubuntu',
-      :concat_basedir   => '/var/lib/puppet/concat'
-    } }
+  context "with source => puppet:///modules/pam/test/accessfile template => ''" do
     let (:params) { {
       :source   => 'puppet:///modules/pam/test/accessfile',
       :template => ''
@@ -81,6 +72,17 @@ describe 'pam::access' do
       'mode'    => '0644',
       'source'  => 'puppet:///modules/pam/test/accessfile'
     ) end
+  end
+
+  context 'with invalid operatingsystem' do
+    let (:facts) { {
+      :operatingsystem => 'beos'
+    } }
+    it do
+      expect {
+        should contain_class('pam::params')
+      }.to raise_error(Puppet::Error, /Unsupported operatingsystem beos/)
+    end
   end
 
 end
