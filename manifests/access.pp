@@ -54,6 +54,12 @@
 #   Hash variable to pass to template (if used)
 #   Valid values: hash, ex:  <tt>{ 'option' => 'value' }</tt>
 #
+# [*restrictive*]
+#   If a final block all users except root
+#   entry should be inserted in the end of the
+#   config file
+#   Valid values: <tt>true</tt>, <tt>false</tt>
+#
 # === Sample Usage
 #
 # * Installing with default settings
@@ -71,16 +77,17 @@
 # settings for that platform.
 #
 class pam::access (
-  $ensure     = 'present',
-  $accessfile = 'UNDEF',
-  $debug      = 'UNDEF',
-  $noaudit    = 'UNDEF',
-  $fieldsep   = 'UNDEF',
-  $listsep    = 'UNDEF',
-  $nodefgroup = 'UNDEF',
-  $source     = 'UNDEF',
-  $template   = 'UNDEF',
-  $parameters = {}
+  $ensure       = 'present',
+  $accessfile   = 'UNDEF',
+  $debug        = 'UNDEF',
+  $noaudit      = 'UNDEF',
+  $fieldsep     = 'UNDEF',
+  $listsep      = 'UNDEF',
+  $nodefgroup   = 'UNDEF',
+  $source       = 'UNDEF',
+  $template     = 'UNDEF',
+  $parameters   = {},
+  $restrictive  = 'UNDEF'
 ) {
 
   include pam
@@ -119,6 +126,10 @@ class pam::access (
     'UNDEF' => $pam::params::access_template,
     default => $template
   }
+  $restrictive_real = $restrictive ? {
+    'UNDEF' => $pam::params::access_restrictive,
+    default => $restrictive
+  }
 
   # Input validation
   $valid_ensure_values = [ 'present', 'absent' ]
@@ -127,6 +138,7 @@ class pam::access (
   validate_bool($debug_real)
   validate_bool($noaudit_real)
   validate_bool($nodefgroup_real)
+  validate_bool($restrictive_real)
 
   $manage_file_source = $source_real ? {
     ''        => undef,
@@ -192,22 +204,26 @@ class pam::access (
 
   case $ensure {
     present: {
-      # use fragments if file source not provided
+      # use fragments if file source or template not provided
       if $manage_file_source == undef and $manage_file_template == undef {
         concat { $accessfile_real:
           owner   => 'root',
           group   => 'root',
           mode    => '0644'
         }
-        concat::fragment { '10_pam_access_conf_head':
+        concat::fragment { '00_pam_access_conf_head':
           target  => $accessfile_real,
           content => "# MANAGED BY PUPPET\n",
-          order   => '10'
+          order   => '00'
         }
-        concat::fragment { '90_pam_access_conf_foot':
-          target  => $accessfile_real,
-          content => "-:ALL${listsep_entry_real}EXCEPT${listsep_entry_real}root:ALL\n",
-          order   => '90'
+        if $restrictive_real == true {
+          pam::access::entry { 'block_all_users_except_root':
+            object      => 'ALL',
+            object_type => 'ALL',
+            permission  => 'deny',
+            priority    => 90,
+            except_user => 'root'
+          }
         }
         Concat::Fragment <| tag == 'pam_access' |>
       # otherwise manage file as usual

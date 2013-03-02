@@ -1,0 +1,15 @@
+<%- ret = []
+  if except_user.is_a? Array
+    except_user.each do |u|
+      ret << u unless u.length == 0
+    end
+  elsif except_user != ''
+    ret << except_user
+  end
+  if except_group.is_a? Array
+    except_group.each do |g|
+      ret << "(%s)" % g unless g.length == 0
+    end
+  elsif except_group != ''
+    ret << "(%s)" % except_group
+  end -%><%= ret.sort.join(scope.lookupvar('::pam::access::listsep_entry_real')) %>

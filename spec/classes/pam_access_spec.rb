@@ -31,10 +31,7 @@ describe 'pam::access' do
       'mode'    => '0644'
     ) end
     it do
-      should contain_concat__fragment('10_pam_access_conf_head').with_content(/^# MANAGED BY PUPPET\n/)
-    end
-    it do
-      should contain_concat__fragment('90_pam_access_conf_foot').with_content(/-:ALL EXCEPT root:ALL\n/)
+      should contain_concat__fragment('00_pam_access_conf_head').with_content(/^# MANAGED BY PUPPET\n/)
     end
   end
 
@@ -55,9 +52,6 @@ describe 'pam::access' do
     it do
       should contain_file('pam_auth_update_access_file').with_content(/.*\n\trequired                        pam_access.so accessfile=\/custom\/accessfile debug fieldsep=','\n$/)
     end
-    it do
-      should contain_concat__fragment('90_pam_access_conf_foot').with_content(/-:ALL EXCEPT root:ALL\n/)
-    end
   end
 
   context "with source => puppet:///modules/pam/test/accessfile template => ''" do
@@ -71,6 +65,20 @@ describe 'pam::access' do
       'group'   => 'root',
       'mode'    => '0644',
       'source'  => 'puppet:///modules/pam/test/accessfile'
+    ) end
+  end
+
+  context "with restrictive => true" do
+    let (:params) { {
+      :restrictive => true,
+    } }
+    it do should contain_pam__access__entry('block_all_users_except_root').with(
+      'ensure'      => 'present',
+      'object'      => 'ALL',
+      'object_type' => 'ALL',
+      'permission'  => 'deny',
+      'priority'    => '90',
+      'except_user' => 'root'
     ) end
   end
 

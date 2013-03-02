@@ -31,6 +31,26 @@
 #   ALL (which always matches) or LOCAL.
 #   Valid values: see above
 #
+# [*priority*]
+#   Determines where in access.conf this entry should
+#   be evaluated. Lower number means higher up in the
+#   configuration file.
+#   Valid values: numerical value
+#
+# [*except_user*]
+#   Adds user except to the access rule.
+#   Most useful when blocking access to a large
+#   matching pattern but want to add certain
+#   excluding entries.
+#   Valid values: string or array of usernames
+#
+# [*except_group*]
+#   Adds group except to the access rule.
+#   Most useful when blocking access to a large
+#   matching pattern but want to add certain
+#   excluding entries.
+#   Valid values: string or array of groupnames
+#
 # === Sample usage
 #
 # pam::access::entry { 'allow_domain_users_group':
@@ -46,34 +66,41 @@ define pam::access::entry (
   $ensure       = 'present',
   $object_type  = 'user',
   $permission   = 'allow',
-  $origins      = 'ALL'
+  $origins      = 'ALL',
+  $priority     = '20',
+  $except_user  = '',
+  $except_group = ''
 ) {
 
   include pam::params
 
-  # Parameter validation and string building
+  # Parameter validation
   $valid_ensure_values = [ 'present', 'absent' ]
+  $valid_permission_values = [ 'allow', 'deny' ]
+  $valid_object_type_values = [ 'user', 'group', '^(?i:all)$' ]
   validate_re($ensure, $valid_ensure_values)
+  validate_re($priority, '^[0-9]+$')
+  validate_re($permission, $valid_permission_values)
+  validate_re($object_type, $valid_object_type_values)
 
-  # Initially threw fail as default selector but apparently
-  # not possible as per issue #4598
-  case $permission {
-    allow: { $permission_real = '+' }
-    deny: { $permission_real = '-' }
-    default: {
-      fail("Unsupported permission ${permission}. Valid values are: allow, deny")
-    }
+  # ACL builder
+  $except_list_real = chomp(template('pam/ruby_except_breakout.erb'))
+  $permission_real = $permission ? {
+    allow => '+',
+    deny  => '-'
   }
-  case $object_type {
-    user: {
-      $name_real = "20_pam_access_conf_${object_type}_${object}"
-      $content_real = "${permission_real}:${object}:${origins}\n"
-    }
-    group: {
-      $name_real = "20_pam_access_conf_${object_type}_${object}"
-      $content_real = "${permission_real}:(${object}):${origins}\n"
-    }
-    default: { fail("Unsupported object_type ${object_type}. Valid values are: user, group") }
+  $object_name_real = $object_type ? {
+    'user'        => $object,
+    'group'       => "(${object})",
+    /^(?i:all)$/  => 'ALL'
+  }
+  $name_real = $except_list_real ? {
+    ''      => "${priority}_pam_access_conf_${permission}_${object_type}_${object}",
+    default => "${priority}_pam_access_conf_${permission}_${object_type}_${object}_except_${except_list_real}"
+  }
+  $content_real = $except_list_real ? {
+    ''      => "${permission_real}:${object_name_real}:${origins}\n",
+    default => "${permission_real}:${object_name_real}${::pam::access::listsep_entry_real}EXCEPT${::pam::access::listsep_entry_real}${except_list_real}:${origins}\n"
   }
 
   # Virtual resource, pam::access will realize it
@@ -83,7 +110,7 @@ define pam::access::entry (
     ensure  => $ensure,
     target  => $pam::access::accessfile_real,
     content => $content_real,
-    order   => '20',
+    order   => $priority,
     tag     => 'pam_access'
   }
 

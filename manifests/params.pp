@@ -28,6 +28,7 @@ class pam::params {
   $fieldsep = undef
   $listsep = undef
   $nodefgroup = false
+  $access_restrictive = false   # if block all users except root should be added by default in pam::access
 
   # This mandates which distributions are supported
   # To add support for other distributions simply add
