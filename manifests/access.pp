@@ -129,7 +129,7 @@ class pam::access (
     ''        => undef,
     default   => $source_real,
   }
-  $manage_file_content = $template_real ? {
+  $manage_file_template = $template_real ? {
     ''        => undef,
     default   => template($template_real),
   }
