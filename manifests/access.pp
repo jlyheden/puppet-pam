@@ -67,10 +67,6 @@
 # To add support for other platforms, edit the params.pp file and provide
 # settings for that platform.
 #
-# === Author
-#
-# Johan Lyheden <johan.lyheden@artificial-solutions.com>
-#
 class pam::access (
   $ensure     = 'present',
   $accessfile = 'UNDEF',
