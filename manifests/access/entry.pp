@@ -41,10 +41,10 @@
 #
 define pam::access::entry (
   $object,
-  $ensure = 'present',
-  $object_type = 'user',
-  $permission = 'allow',
-  $origins = 'ALL'
+  $ensure       = 'present',
+  $object_type  = 'user',
+  $permission   = 'allow',
+  $origins      = 'ALL'
 ) {
 
   include pam::params
@@ -52,20 +52,24 @@ define pam::access::entry (
   # Parameter validation and string building
   $valid_ensure_values = [ 'present', 'absent' ]
   validate_re($ensure, $valid_ensure_values)
-  $permission_real = $permission ? {
-    'allow' => '+',
-    'deny'  => '-',
-    default => fail("Unsupported permission ${permission}. Valid values are: allow, deny")
+
+  # Initially threw fail as default selector but apparently
+  # not possible as per issue #4598
+  case $permission {
+    allow: { $permission_real = '+' }
+    deny: { $permission_real = '-' }
+    default: { fail("Unsupported permission ${permission}. Valid values are: allow, deny") }
   }
-  $name_real = $object_type ? {
-    'user'  => "20_pam_access_conf_user_${object}",
-    'group' => "20_pam_access_conf_group_${object}",
-    default => fail("Unsupported object_type ${object_type}. Valid values are: user, group")
-  }
-  $content_real = $object_type ? {
-    'user'  => "${permission_real}:${object}:${origins}\n",
-    'group' => "${permission_real}:(${object}):${origins}\n",
-    default => fail("Unsupported object_type ${object_type}. Valid values are: user, group")
+  case $object_type {
+    user: {
+      $name_real = "20_pam_access_conf_${object_type}_${object}"
+      $content_real = "${permission_real}:${object}:${origins}\n"
+    }
+    group: {
+      $name_real = "20_pam_access_conf_${object_type}_${object}"
+      $content_real = "${permission_real}:(${object}):${origins}\n"
+    }
+    default: { fail("Unsupported object_type ${object_type}. Valid values are: user, group") }
   }
 
   # Virtual resource, pam::access will realize it
