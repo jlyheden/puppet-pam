@@ -39,10 +39,6 @@
 #   origins     => 'ALL',
 # }
 #
-# === Author
-#
-# Johan Lyheden <johan.lyheden@artificial-solutions.com>
-#
 define pam::access::entry (
   $object,
   $ensure = 'present',
