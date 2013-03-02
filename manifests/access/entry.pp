@@ -23,10 +23,12 @@
 #   Valid values: <tt>allow</tt>, <tt>deny</tt>
 #
 # [*origins*]
-#   A list of one or more tty names (for non-networked logins), host names, domain names (begin with "."),
-#   host addresses, internet network numbers (end with "."), internet network addresses
-#   with network mask (where network mask can be a decimal number or
-#   an internet address also), ALL (which always matches) or LOCAL.
+#   A list of one or more tty names (for non-networked logins),
+#   host names, domain names (begin with "."),
+#   host addresses, internet network numbers (end with "."),
+#   internet network addresses with network mask (where network mask
+#   can be a decimal number or an internet address also),
+#   ALL (which always matches) or LOCAL.
 #   Valid values: see above
 #
 # === Sample usage
@@ -58,7 +60,9 @@ define pam::access::entry (
   case $permission {
     allow: { $permission_real = '+' }
     deny: { $permission_real = '-' }
-    default: { fail("Unsupported permission ${permission}. Valid values are: allow, deny") }
+    default: {
+      fail("Unsupported permission ${permission}. Valid values are: allow, deny")
+    }
   }
   case $object_type {
     user: {

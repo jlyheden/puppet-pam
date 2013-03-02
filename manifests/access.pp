@@ -28,15 +28,18 @@
 #   Valid values: <tt>true</tt>,<tt>false</tt>
 #
 # [*fieldsep*]
-#   This option modifies the field separator character that pam_access will recognize when parsing the access configuration file
+#   This option modifies the field separator character that
+#   pam_access will recognize when parsing the access configuration file
 #   Valid values: <tt>sep character</tt> ex: <tt>,</tt>
 #
 # [*listsep*]
-#   This option modifies the list separator character that pam_access will recognize when parsing the access configuration file
+#   This option modifies the list separator character that pam_access will
+#   recognize when parsing the access configuration file
 #   Valid values: <tt>sep character</tt> ex: <tt>,</tt>
 #
 # [*nodefgroup*]
-#   User tokens which are not enclosed in parentheses will not be matched against the group database
+#   User tokens which are not enclosed in parentheses will not be matched
+#   against the group database
 #   Valid values: <tt>true</tt>,<tt>false</tt>
 #
 # [*source*]
