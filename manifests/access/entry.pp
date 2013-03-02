@@ -43,16 +43,19 @@
 #
 # Johan Lyheden <johan.lyheden@artificial-solutions.com>
 #
-define pam::access::entry ( $object,
-                            $ensure = 'present',
-                            $object_type = 'user',
-                            $permission = 'allow',
-                            $origins = 'ALL' ) {
+define pam::access::entry (
+  $object,
+  $ensure = 'present',
+  $object_type = 'user',
+  $permission = 'allow',
+  $origins = 'ALL'
+) {
 
   include pam::params
 
   # Parameter validation and string building
-  validate_re($ensure, [ 'present', 'absent' ])
+  $valid_ensure_values = [ 'present', 'absent' ]
+  validate_re($ensure, $valid_ensure_values)
   $permission_real = $permission ? {
     'allow' => '+',
     'deny'  => '-',
@@ -74,7 +77,7 @@ define pam::access::entry ( $object,
   # by template file or source file
   @concat::fragment { $name_real:
     ensure  => $ensure,
-    target  => $pam::access::accessfile,
+    target  => $pam::access::accessfile_real,
     content => $content_real,
     order   => '20',
     tag     => 'pam_access'
