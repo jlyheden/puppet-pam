@@ -1,4 +1,5 @@
 # Module: pam
+[![Build Status](https://travis-ci.org/jlyheden/puppet-pam.png)](https://travis-ci.org/jlyheden/puppet-pam)
 
 This is the Puppet module for managing PAM - Pluggable Authentication Module.
 
