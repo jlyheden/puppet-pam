@@ -169,9 +169,9 @@ class pam::access (
   }
   $pam_access_parameters = "${accessfile_entry}${debug_entry}${noaudit_entry}${fieldsep_entry}${listsep_entry}${nodefgroup_entry}"
 
-  # Ubuntu uses pam-auth-update to build pam configuration
-  case $::lsbdistcodename {
-    lucid: {
+  # Debuntu uses pam-auth-update to build pam configuration
+  case $::operatingsystem {
+    'Ubuntu', 'Debian': {
       file { 'pam_auth_update_access_file':
         ensure  => $ensure,
         path    => $pam::params::pam_auth_update_access_file,
@@ -183,7 +183,7 @@ class pam::access (
       }
     }
     default: {
-      fail("Unsupported distribution ${::lsbdistcodename}")
+      fail("Unsupported operatingsystem ${::operatingsystem}")
     }
   }
 
