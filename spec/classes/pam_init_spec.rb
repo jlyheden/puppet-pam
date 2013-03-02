@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'pam' do
 
-  # set allowed distro
+  # set depending facts
   let (:facts) { {
     :operatingsystem  => 'Ubuntu'
   } } 
