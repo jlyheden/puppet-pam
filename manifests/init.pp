@@ -37,7 +37,7 @@
 #
 class pam (
   $ensure       = 'UNDEF',
-  $autoupgrade  = 'UNDEF',
+  $autoupgrade  = 'UNDEF'
 ) {
 
   include pam::params
