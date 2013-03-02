@@ -30,21 +30,33 @@
 # To add support for other platforms, edit the params.pp file and provide
 # settings for that platform.
 #
-# === Author
-#
-# Johan Lyheden <johan.lyheden@artificial-solutions.com>
-#
-class pam::ldap ( $ensure = $pam::params::ensure, $autoupgrade = $pam::params::autoupgrade ) inherits pam::params {
+class pam::ldap (
+  $ensure       = 'UNDEF',
+  $autoupgrade  = 'UNDEF'
+) {
+
+  include pam::params
+
+  # puppet 2.6
+  $ensure_real = $ensure ? {
+    'UNDEF' => $pam::params::ensure,
+    default => $ensure
+  }
+  $autoupgrade_real = $autoupgrade ? {
+    'UNDEF' => $pam::params::autoupgrade,
+    default => $autoupgrade
+  }
 
   # Input validation
-  validate_re($ensure,[ 'present', 'absent', 'purge' ])
+  $valid_ensure_values = [ 'present', 'absent', 'purged' ]
+  validate_re($ensure, $valid_ensure_values)
   validate_bool($autoupgrade)
 
   # Manages automatic upgrade behavior
-  if $ensure == 'present' and $autoupgrade == true {
+  if $ensure_real == 'present' and $autoupgrade_real == true {
     $ensure_package = 'latest'
   } else {
-    $ensure_package = $ensure
+    $ensure_package = $ensure_real
   }
 
   package { 'pamldap':
