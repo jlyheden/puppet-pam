@@ -49,8 +49,8 @@ class pam::ldap (
 
   # Input validation
   $valid_ensure_values = [ 'present', 'absent', 'purged' ]
-  validate_re($ensure, $valid_ensure_values)
-  validate_bool($autoupgrade)
+  validate_re($ensure_real, $valid_ensure_values)
+  validate_bool($autoupgrade_real)
 
   # Manages automatic upgrade behavior
   if $ensure_real == 'present' and $autoupgrade_real == true {
