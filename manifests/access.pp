@@ -122,7 +122,8 @@ class pam::access (
   }
 
   # Input validation
-  validate_re($ensure, [ 'present', 'absent' ])
+  $valid_ensure_values = [ 'present', 'absent' ]
+  validate_re($ensure, $valid_ensure_values)
   validate_hash($parameters)
 
   $manage_file_source = $source_real ? {
