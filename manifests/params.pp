@@ -32,8 +32,8 @@ class pam::params {
   # This mandates which distributions are supported
   # To add support for other distributions simply add
   # a matching regex line to the operatingsystem fact
-  case $::lsbdistcodename {
-    'precise','lucid': {
+  case $::operatingsystem {
+    'Ubuntu','Debian': {
       # base
       $package = [ 'libpam0g', 'libpam-modules', 'libpam-runtime' ]
       # ldap
@@ -45,7 +45,7 @@ class pam::params {
       $pam_auth_update_access_file = "${pam_auth_update_dir}/access"
     }
     default: {
-      fail("Unsupported distribution ${::lsbdistcodename}")
+      fail("Unsupported operatingsystem ${::operatingsystem}")
     }
   }
 
