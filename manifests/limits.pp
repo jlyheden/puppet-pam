@@ -71,13 +71,6 @@
 # * Uninstalling the software
 #   class { 'pam::limits': ensure => absent }
 #
-# === Supported platforms
-#
-# This module has not been tested
-#
-# To add support for other platforms, edit the params.pp file and provide
-# settings for that platform.
-#
 class pam::limits (
   $ensure       = 'present',
   $change_uid   = 'UNDEF',

@@ -39,14 +39,6 @@
 #     permission: 'allow'
 #     origins: 'ALL'
 #
-# === Supported platforms
-#
-# This module has been tested on the following platforms
-# * Ubuntu LTS 10.04
-#
-# To add support for other platforms, edit the params.pp file and provide
-# settings for that platform.
-#
 class pam::access::entries ( $parameters = {} ) {
 
   include pam

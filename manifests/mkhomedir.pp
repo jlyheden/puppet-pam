@@ -28,14 +28,6 @@
 # * Uninstalling the software
 #   class { 'pam::mkhomedir': ensure => absent }
 #
-# === Supported platforms
-#
-# This module has been tested on the following platforms
-# * Ubuntu LTS 10.04
-#
-# To add support for other platforms, edit the params.pp file and provide
-# settings for that platform.
-#
 class pam::mkhomedir (
   $ensure = 'present',
   $umask  = 'UNDEF',
