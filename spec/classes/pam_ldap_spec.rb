@@ -13,6 +13,15 @@ describe 'pam::ldap' do
       'ensure'  => 'present',
       'name'    => 'libpam-ldapd'
     ) end
+    it do should contain_file('pam_auth_update_ldap_file').with(
+      'ensure'  => 'present',
+      'owner'   => 'root',
+      'group'   => 'root',
+      'mode'    => '0644',
+      'source'  => 'puppet:///modules/pam/pam-configs/ldap',
+      'notify'  => 'Exec[pam_auth_update]',
+      'require' => 'Package[pamldap]'
+    ) end
   end
 
   context 'with autoupgrade => true' do

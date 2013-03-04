@@ -44,6 +44,7 @@ class pam::ldap (
   $content      = 'UNDEF'
 ) {
 
+  include pam
   include pam::params
 
   # puppet 2.6
@@ -94,7 +95,7 @@ class pam::ldap (
         }
       }
       file { 'pam_auth_update_ldap_file':
-        ensure  => $ensure,
+        ensure  => $ensure_real,
         path    => $pam::params::pam_auth_update_ldap_file,
         owner   => 'root',
         group   => 'root',
