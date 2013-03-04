@@ -47,8 +47,8 @@ class pam (
     'UNDEF' => $pam::params::autoupgrade,
     default => $autoupgrade
   }
-  $valid_ensure_values = [ 'present', 'absent', 'purge' ]
-  validate_re($ensure_real, $valid_ensure_values)
+
+  validate_re($ensure_real, $pam::params::valid_ensure_values)
   validate_bool($autoupgrade_real)
 
   # Manages automatic upgrade behavior

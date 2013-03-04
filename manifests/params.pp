@@ -4,6 +4,8 @@
 #
 class pam::params {
 
+  $valid_ensure_values = [ 'present', 'absent', 'purged' ]
+
   # base
   $ensure = present
   $service_enable = true
@@ -60,6 +62,7 @@ class pam::params {
       $pam_auth_update_access_file = "${pam_auth_update_dir}/access"
       $pam_auth_update_limits_file = "${pam_auth_update_dir}/limits"
       $pam_auth_update_ldap_file = "${pam_auth_update_dir}/ldap"
+      $pam_auth_update_ldap_template = ''
     }
     default: {
       fail("Unsupported operatingsystem ${::operatingsystem}")

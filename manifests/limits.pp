@@ -53,12 +53,11 @@
 #   Valid values: <tt>true</tt>,<tt>false</tt>
 #
 # [*source*]
-#   Path to static Puppet file to use
+#   Pam limits.conf file source
 #   Valid values: <tt>puppet:///modules/mymodule/path/to/file.conf</tt>
 #
-# [*template*]
-#   Path to ERB puppet template file to use
-#   Valid values: <tt>mymodule/path/to/file.conf.erb</tt>
+# [*content*]
+#   Pam limits.conf file content
 #
 # [*source_d*]
 #   Path to source directory for conf_d
@@ -89,7 +88,7 @@ class pam::limits (
   $noaudit      = 'UNDEF',
   $utmp_early   = 'UNDEF',
   $source       = 'UNDEF',
-  $template     = 'UNDEF',
+  $content      = 'UNDEF',
   $source_d     = 'UNDEF'
 ) {
 
@@ -129,9 +128,12 @@ class pam::limits (
     'UNDEF' => $pam::params::limits_source,
     default => $source,
   }
-  $template_real = $template ? {
-    'UNDEF' => $pam::params::limits_template,
-    default => $template
+  $content_real = $content ? {
+    'UNDEF'   => $pam::params::limits_template ? {
+      ''      => '',
+      default =>template($pam::params::limits_template),
+    },
+    default   => $content
   }
   $source_d_real = $source_d ? {
     'UNDEF' => $pam::params::limits_source_d,
@@ -139,22 +141,12 @@ class pam::limits (
   }
 
   # Input validation
-  $valid_ensure_values = [ 'present', 'absent' ]
-  validate_re($ensure, $valid_ensure_values)
+  validate_re($ensure, $pam::params::valid_ensure_values)
   validate_bool($debug_real)
   validate_bool($noaudit_real)
   validate_bool($change_uid_real)
   validate_bool($utmp_early_real)
   validate_bool($purge_conf_d_real)
-
-  $manage_file_source = $source_real ? {
-    ''        => undef,
-    default   => $source_real,
-  }
-  $manage_file_template = $template_real ? {
-    ''        => undef,
-    default   => template($template_real),
-  }
 
   # Sanitized string builder variables
   # for pam_access.so options
@@ -190,20 +182,19 @@ class pam::limits (
         notify  => Exec['pam_auth_update']
       }
     }
-    default: {
-      fail("Unsupported operatingsystem ${::operatingsystem}")
-    }
+    default: { }
   }
 
   case $ensure {
     present: {
-      if $manage_file_template != undef {
+      if $source_real != '' {
         File['pam_limits_conf'] {
-          content => $manage_file_template
+          source => $source_real
         }
-      } else {
+      }
+      elsif $content_real != '' {
         File['pam_limits_conf'] {
-          source  => $manage_file_source
+          content  => $content_real
         }
       }
       if $purge_conf_d_real {

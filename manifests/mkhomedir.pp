@@ -56,8 +56,7 @@ class pam::mkhomedir (
   }
 
   # input validation
-  $valid_ensure_values = [ 'present', 'absent' ]
-  validate_re($ensure, $valid_ensure_values)
+  validate_re($ensure, $pam::params::valid_ensure_values)
   validate_re($umask_real, '^[0-4][0-7]{3}$')
 
   # Debuntu uses pam-auth-update to build pam configuration

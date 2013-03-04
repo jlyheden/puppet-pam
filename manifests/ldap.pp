@@ -15,9 +15,11 @@
 #   Valid values: <tt>true</tt>, <tt>false</tt>
 #
 # [*source*]
-#   Path to Puppet source file for Debuntu pam auth
-#   configuration file.
+#   Path to Puppet source file for Debuntu pam-auth-update file
 #   Valid values: <tt>puppet:///modules/mymodule/myfile</tt>
+#
+# [*content*]
+#   Content to populate pam-auth-update file with
 #
 # === Sample Usage
 #
@@ -38,7 +40,8 @@
 class pam::ldap (
   $ensure       = 'UNDEF',
   $autoupgrade  = 'UNDEF',
-  $source       = 'UNDEF'
+  $source       = 'UNDEF',
+  $content      = 'UNDEF'
 ) {
 
   include pam::params
@@ -56,36 +59,51 @@ class pam::ldap (
     'UNDEF' => $pam::params::pam_auth_update_ldap_source,
     default => $source
   }
-
-  # Debuntu uses pam-auth-update to build pam configuration
-  case $::operatingsystem {
-    'Ubuntu', 'Debian': {
-      file { 'pam_auth_update_ldap_file':
-        ensure  => $ensure,
-        path    => $pam::params::pam_auth_update_ldap_file,
-        owner   => 'root',
-        group   => 'root',
-        mode    => '0644',
-        source  => $source_real,
-        notify  => Exec['pam_auth_update'],
-        require => Package['pamldap']
-      }
-    }
-    default: {
-      fail("Unsupported operatingsystem ${::operatingsystem}")
-    }
+  $content_real = $content ? {
+    'UNDEF'   => $pam::params::pam_auth_update_ldap_template ? {
+      ''      => '',
+      default => template($pam::params::pam_auth_update_ldap_template)
+    },
+    default   => $content
   }
 
   # Input validation
-  $valid_ensure_values = [ 'present', 'absent', 'purged' ]
-  validate_re($ensure_real, $valid_ensure_values)
+  validate_re($ensure_real, $pam::params::valid_ensure_values)
   validate_bool($autoupgrade_real)
+  if $source_real != '' and $content_real != '' {
+    fail('Only one of parameters source and content can be set')
+  }
 
   # Manages automatic upgrade behavior
   if $ensure_real == 'present' and $autoupgrade_real == true {
     $ensure_package = 'latest'
   } else {
     $ensure_package = $ensure_real
+  }
+
+  # Debuntu uses pam-auth-update to build pam configuration
+  case $::operatingsystem {
+    'Ubuntu', 'Debian': {
+      if $source_real != '' {
+        File['pam_auth_update_ldap_file'] {
+          source  => $source_real
+        }
+      } elsif $content_real != '' {
+        File['pam_auth_update_ldap_file'] {
+          content => $content_real
+        }
+      }
+      file { 'pam_auth_update_ldap_file':
+        ensure  => $ensure,
+        path    => $pam::params::pam_auth_update_ldap_file,
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0644',
+        notify  => Exec['pam_auth_update'],
+        require => Package['pamldap']
+      }
+    }
+    default: { }
   }
 
   package { 'pamldap':
