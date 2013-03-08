@@ -238,7 +238,7 @@ class pam::access (
       # finds # MANAGED BY PUPPET in the file
       exec { 'insert_blank_access_conf_file':
         command => "echo '## UNMANAGED FILE' > ${accessfile_real}",
-        onlyif  => "grep '^# MANAGED BY PUPPET ${accessfile_real} >/dev/null",
+        onlyif  => "grep '^# MANAGED BY PUPPET' ${accessfile_real} >/dev/null",
         path    => [ '/bin', '/sbin', '/usr/bin', '/usr/sbin' ]
       }
     }
