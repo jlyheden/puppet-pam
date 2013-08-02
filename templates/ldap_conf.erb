@@ -1,0 +1,10 @@
+# MANAGED BY PUPPET - don't edit by hand
+
+<%- if @ldapconf_params_real.is_a? Array -%>
+<%= @ldapconf_params_real.join("\n") %>
+<%- else -%>
+<%= @ldapconf_params_real %>
+<%- end -%>
+<%- if @ldapconf_params_real.grep(/^nss_initgroups_ignoreusers /).length == 0 -%>
+nss_initgroups_ignoreusers <%= @nss_local_users %>
+<%- end -%>

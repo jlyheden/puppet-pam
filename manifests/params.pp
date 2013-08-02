@@ -44,6 +44,17 @@ class pam::params {
   $limits_template = ''
   $limits_purge_conf_d = true
 
+  # pam ldap
+  $ldapconf_source = ''
+  $ldapconf_params = [
+    'base dc=example,dc=net',
+    'uri ldapi:///',
+    'ldap_version 3',
+    'rootbinddn cn=manager,dc=example,dc=net',
+    'pam_password md5'
+  ]
+  $ldapconf_template = 'pam/ldap_conf.erb'
+
   # This mandates which distributions are supported
   # To add support for other distributions simply add
   # a matching regex line to the operatingsystem fact
@@ -52,7 +63,8 @@ class pam::params {
       # base
       $package = [ 'libpam0g', 'libpam-modules', 'libpam-runtime' ]
       # ldap
-      $ldap_package = 'libpam-ldapd'
+      $ldap_package = 'libpam-ldap'
+      $ldapd_package = 'libpam-ldapd'
       $pam_auth_update_ldap_source = 'puppet:///modules/pam/pam-configs/ldap'
       $pam_auth_update_mkhomedir_tmpl = 'pam/pam_auth_update/mkhomedir.erb'
       $pam_auth_update_access_tmpl = 'pam/pam_auth_update/access.erb'

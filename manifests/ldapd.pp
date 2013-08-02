@@ -1,4 +1,4 @@
-# == Class: pam::ldap
+# == Class: pam::ldapd
 #
 # This module manages the LDAP module for PAM. This allows the
 # server to authenticate via directory services such as Openldap
@@ -29,14 +29,11 @@
 # * Uninstalling the software
 #   class { 'pam::ldap': ensure => absent }
 #
-class pam::ldap (
-  $ensure           = 'UNDEF',
-  $autoupgrade      = 'UNDEF',
-  $source           = 'UNDEF',
-  $content          = 'UNDEF',
-  $ldapconf_source  = 'UNDEF',
-  $ldapconf_content = 'UNDEF',
-  $ldapconf_params  = 'UNDEF'
+class pam::ldapd (
+  $ensure       = 'UNDEF',
+  $autoupgrade  = 'UNDEF',
+  $source       = 'UNDEF',
+  $content      = 'UNDEF'
 ) {
 
   include pam
@@ -55,24 +52,12 @@ class pam::ldap (
     'UNDEF' => $pam::params::pam_auth_update_ldap_source,
     default => $source
   }
-  $ldapconf_params_real = $ldapconf_params ? {
-    'UNDEF' => $pam::params::ldapconf_params,
-    default => $ldapconf_params
-  }
   $content_real = $content ? {
     'UNDEF'   => $pam::params::pam_auth_update_ldap_template ? {
       ''      => '',
       default => template($pam::params::pam_auth_update_ldap_template)
     },
     default   => $content
-  }
-  $ldapconf_source_real = $ldapconf_source ? {
-    'UNDEF' => $pam::params::ldapconf_source,
-    default => $ldapconf_source
-  }
-  $ldapconf_content_real = $ldapconf_content ? {
-    'UNDEF' => template($pam::params::ldapconf_template),
-    default => $ldapconf_content
   }
 
   # Input validation
@@ -108,35 +93,15 @@ class pam::ldap (
         group   => 'root',
         mode    => '0644',
         notify  => Exec['pam_auth_update'],
-        require => Package['pamldap']
-      }
-      service { 'libnss-ldap':
-        enable  => false
+        require => Package['pamldapd']
       }
     }
     default: { }
   }
 
-  if $ldapconf_source_real != '' {
-    File['ldap.conf'] {
-      source  => $ldapconf_source_real
-    }
-  } else {
-    File['ldap.conf'] {
-      content => $ldapconf_content_real
-    }
-  }
-  file { 'ldap.conf':
-    ensure  => $ensure_real,
-    path    => '/etc/ldap.conf',
-    mode    => '0644',
-    owner   => 'root',
-    group   => 'root',
-  }
-
-  package { 'pamldap':
+  package { 'pamldapd':
     ensure  => $ensure_package,
-    name    => $pam::params::ldap_package
+    name    => $pam::params::ldapd_package
   }
 
 }
