@@ -15,6 +15,12 @@
 #   If Puppet should upgrade the software automatically
 #   Valid values: <tt>true</tt>, <tt>false</tt>
 #
+# [*force_pam_auth_update*]
+#   Only applies to Debian/Ubuntu. If pam-auth-update
+#   should force the configuration and overwrite local
+#   changes.
+#   Valid values: <tt>boolean</tt>
+#
 # === Sample Usage
 #
 # * Installing with default settings
@@ -29,8 +35,9 @@
 # * Ubuntu LTS 10.04, 12.04
 #
 class pam (
-  $ensure       = 'UNDEF',
-  $autoupgrade  = 'UNDEF'
+  $ensure                 = 'UNDEF',
+  $autoupgrade            = 'UNDEF',
+  $force_pam_auth_update  = false
 ) {
 
   include pam::params
@@ -60,8 +67,20 @@ class pam (
     name    => $pam::params::package
   }
 
+  case $force_pam_auth_update {
+    true: {
+      $pam_auth_update_cmd = 'pam-auth-update --force'
+    }
+    false: {
+      $pam_auth_update_cmd = 'pam-auth-update'
+    }
+    default: {
+      fail("Unsupported force_pam_auth_update value ${::force_pam_auth_update}. Valid values: true, false")
+    }
+  }
+
   exec { 'pam_auth_update':
-    command     => 'pam-auth-update',
+    command     => $pam_auth_update_cmd,
     path        => [ '/bin', '/sbin', '/usr/bin', '/usr/sbin' ],
     refreshonly => true,
     require     => Package['pam']

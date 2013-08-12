@@ -5,6 +5,7 @@ describe 'pam::ldap' do
   # set depending facts
   let (:facts) { {
     :operatingsystem  => 'Ubuntu',
+    :lsbdistcodename  => 'lucid',
     :concat_basedir   => '/var/lib/puppet/concat',
     :nss_local_users  => 'user1,user2,user3'
   } } 
@@ -19,7 +20,7 @@ describe 'pam::ldap' do
       'owner'   => 'root',
       'group'   => 'root',
       'mode'    => '0644',
-      'source'  => 'puppet:///modules/pam/pam-configs/ldap',
+      'source'  => ['puppet:///modules/pam/pam-configs/lucid_ldap', 'puppet:///modules/pam/pam-configs/ldap'],
       'notify'  => 'Exec[pam_auth_update]',
       'require' => 'Package[pamldap]'
     ) end

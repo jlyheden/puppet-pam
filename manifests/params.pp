@@ -65,7 +65,10 @@ class pam::params {
       # ldap
       $ldap_package = 'libpam-ldap'
       $ldapd_package = 'libpam-ldapd'
-      $pam_auth_update_ldap_source = 'puppet:///modules/pam/pam-configs/ldap'
+      $pam_auth_update_ldap_source = [
+        "puppet:///modules/pam/pam-configs/${::lsbdistcodename}_ldap",
+        'puppet:///modules/pam/pam-configs/ldap'
+      ]
       $pam_auth_update_mkhomedir_tmpl = 'pam/pam_auth_update/mkhomedir.erb'
       $pam_auth_update_access_tmpl = 'pam/pam_auth_update/access.erb'
       $pam_auth_update_limits_tmpl = 'pam/pam_auth_update/limits.erb'
