@@ -51,6 +51,8 @@
 #   excluding entries.
 #   Valid values: string or array of groupnames
 #
+# [*except_netgroup*]
+#    As above but for netgroups
 # === Sample usage
 #
 # pam::access::entry { 'allow_domain_users_group':
@@ -69,7 +71,8 @@ define pam::access::entry (
   $origins      = 'ALL',
   $priority     = '20',
   $except_user  = '',
-  $except_group = ''
+  $except_group = '',
+  $except_netgroup = ''
 ) {
 
   include pam::params
@@ -77,7 +80,7 @@ define pam::access::entry (
   # Parameter validation
   $valid_ensure_values = [ 'present', 'absent' ]
   $valid_permission_values = [ 'allow', 'deny' ]
-  $valid_object_type_values = [ 'user', 'group', '^(?i:all)$' ]
+  $valid_object_type_values = [ 'user', 'group', 'netgroup', '^(?i:all)$' ]
   validate_re($ensure, $valid_ensure_values)
   validate_re($priority, '^[0-9]+$')
   validate_re($permission, $valid_permission_values)
@@ -92,6 +95,7 @@ define pam::access::entry (
   $object_name_real = $object_type ? {
     'user'        => $object,
     'group'       => "(${object})",
+    'netgroup'    => "@${object}",
     /^(?i:all)$/  => 'ALL'
   }
   $name_real = $except_list_real ? {
