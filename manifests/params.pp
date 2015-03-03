@@ -61,7 +61,7 @@ class pam::params {
   case $::operatingsystem {
     'Ubuntu','Debian': {
       # base
-      $package = [ 'libpam0g', 'libpam-modules', 'libpam-runtime' ]
+      $package = 'libpam-runtime'
       # ldap
       $ldap_package = 'libpam-ldap'
       $ldapd_package = 'libpam-ldapd'
