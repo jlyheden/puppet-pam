@@ -98,12 +98,12 @@ define pam::limits::entry (
   }
 
   @file { "pam_limits_${priority}_${name}":
-    ensure  => $ensure,
-    path    => $filename_real,
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0644',
-    tag     => 'pam_limits_conf_d'
+    ensure => $ensure,
+    path   => $filename_real,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0644',
+    tag    => 'pam_limits_conf_d'
   }
 
 }

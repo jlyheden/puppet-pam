@@ -199,10 +199,10 @@ class pam::access (
       # use fragments if file source or template not provided
       if $manage_file_source == undef and $manage_file_template == undef {
         concat { $accessfile_real:
-          path    => $accessfile_real,
-          owner   => 'root',
-          group   => 'root',
-          mode    => '0644'
+          path  => $accessfile_real,
+          owner => 'root',
+          group => 'root',
+          mode  => '0644'
         }
         concat::fragment { '00_pam_access_conf_head':
           target  => $accessfile_real,

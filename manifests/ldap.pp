@@ -127,16 +127,16 @@ class pam::ldap (
     }
   }
   file { 'ldap.conf':
-    ensure  => $ensure_real,
-    path    => '/etc/ldap.conf',
-    mode    => '0644',
-    owner   => 'root',
-    group   => 'root',
+    ensure => $ensure_real,
+    path   => '/etc/ldap.conf',
+    mode   => '0644',
+    owner  => 'root',
+    group  => 'root',
   }
 
   package { 'pamldap':
-    ensure  => $ensure_package,
-    name    => $pam::params::ldap_package
+    ensure => $ensure_package,
+    name   => $pam::params::ldap_package
   }
 
 }

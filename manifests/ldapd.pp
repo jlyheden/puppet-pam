@@ -100,8 +100,8 @@ class pam::ldapd (
   }
 
   package { 'pamldapd':
-    ensure  => $ensure_package,
-    name    => $pam::params::ldapd_package
+    ensure => $ensure_package,
+    name   => $pam::params::ldapd_package
   }
 
 }

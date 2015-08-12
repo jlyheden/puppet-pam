@@ -203,18 +203,18 @@ class pam::limits (
         }
       }
       file { 'pam_limits_conf':
-        ensure  => present,
-        path    => $conf_real,
-        owner   => 'root',
-        group   => 'root',
-        mode    => '0644'
+        ensure => present,
+        path   => $conf_real,
+        owner  => 'root',
+        group  => 'root',
+        mode   => '0644'
       }
       file { 'pam_limits_conf_d':
-        ensure  => directory,
-        path    => $conf_d_real,
-        owner   => 'root',
-        group   => 'root',
-        mode    => '0644',
+        ensure => directory,
+        path   => $conf_d_real,
+        owner  => 'root',
+        group  => 'root',
+        mode   => '0644',
       }
       File <| tag == 'pam_limits_conf_d' |>
     }

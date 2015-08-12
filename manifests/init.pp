@@ -63,8 +63,8 @@ class pam (
   }
 
   package { 'pam':
-    ensure  => $ensure_package,
-    name    => $pam::params::package
+    ensure => $ensure_package,
+    name   => $pam::params::package
   }
 
   case $force_pam_auth_update {
