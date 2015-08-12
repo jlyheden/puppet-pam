@@ -6,7 +6,7 @@ describe 'pam::access::entry' do
   let (:facts) { {
     :operatingsystem  => 'Ubuntu',
     :concat_basedir   => '/var/lib/puppet/concat'
-  } } 
+  } }
 
   let (:pre_condition) do [
     'class { "pam": }',
@@ -21,7 +21,7 @@ describe 'pam::access::entry' do
       :object       => 'Domain Users',
       :object_type  => 'group',
       :permission   => 'allow'
-    } } 
+    } }
     it do
       should contain_concat__fragment('20_pam_access_conf_allow_group_Domain Users').with_content(/\+:\(Domain Users\):ALL\n/)
     end
@@ -34,11 +34,11 @@ describe 'pam::access::entry' do
       :object       => 'bogus',
       :object_type  => 'user',
       :permission   => 'allow'
-    } } 
+    } }
     it do
       should contain_concat__fragment('20_pam_access_conf_allow_user_bogus').with_content(/\+:bogus:ALL\n/)
     end
-  end 
+  end
 
   context 'with object => ALL, object_type => ALL, permission => deny, except_user => myuser' do
     let (:name) { 'block_all_except_myuser' }
@@ -120,11 +120,9 @@ describe 'pam::access::entry' do
       :object_type  => 'fail',
       :permission   => 'allow'
     } }
-    it do
-      expect {
-        should include_class('pam::access')
-      }.to raise_error(Puppet::Error, /"fail" does not match/)
-    end
+    it {
+      should compile.and_raise_error(/"fail" does not match/)
+    }
   end
 
   context 'with object => bogus, object_type => user, permission => fail' do
@@ -135,11 +133,9 @@ describe 'pam::access::entry' do
       :object_type  => 'user',
       :permission   => 'fail'
     } }
-    it do
-      expect {
-        should include_class('pam::access')
-      }.to raise_error(Puppet::Error, /"fail" does not match/)
-    end
+    it {
+      should compile.and_raise_error(/"fail" does not match/)
+    }
   end
 
 end

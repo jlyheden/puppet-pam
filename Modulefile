@@ -1,5 +1,5 @@
 name 'jlyheden-pam'
-version '0.0.2'
+version '0.0.3'
 author 'Johan Lyheden'
 license 'Apache License 2.0'
 project_page 'https://github.com/jlyheden/puppet-pam'

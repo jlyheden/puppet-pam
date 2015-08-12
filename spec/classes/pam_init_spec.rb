@@ -5,12 +5,12 @@ describe 'pam' do
   # set depending facts
   let (:facts) { {
     :operatingsystem  => 'Ubuntu'
-  } } 
+  } }
 
   context 'with default params' do
     it do should contain_package('pam').with(
       'ensure'  => 'present',
-      'name'    => [ 'libpam0g', 'libpam-modules', 'libpam-runtime' ]
+      'name'    => 'libpam-runtime'
     ) end
   end
 
@@ -20,7 +20,7 @@ describe 'pam' do
     } }
     it do should contain_package('pam').with(
       'ensure'  => 'latest',
-      'name'    => [ 'libpam0g', 'libpam-modules', 'libpam-runtime' ]
+      'name'    => 'libpam-runtime'
     ) end
   end
 
