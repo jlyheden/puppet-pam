@@ -7,12 +7,12 @@ matrix:
   fast_finish: true
   include:
   - rvm: 1.9.3
-    env: PUPPET_GEM_VERSION="~> 2.7.23"
+    env: PUPPET_GEM_VERSION="2.7.23"
   - rvm: 1.9.3
-    env: PUPPET_GEM_VERSION="~> 3.0"
+    env: PUPPET_GEM_VERSION="3.7.3"
   - rvm: 1.9.3
-    env: PUPPET_GEM_VERSION="~> 4.0"
+    env: PUPPET_GEM_VERSION="4.2.0"
   allow_failures:
-  - env: PUPPET_GEM_VERSION="~> 4.0"
+  - env: PUPPET_GEM_VERSION="4.2.0"
 notifications:
   email: false
