@@ -1,0 +1,25 @@
+{
+  "name": "jlyheden-pam",
+  "version": "0.0.4",
+  "author": "Johan Lyheden",
+  "license": "Apache-2.0",
+  "summary": "A Puppet module for managing PAM",
+  "source": "https://github.com/jlyheden/puppet-pam.git",
+  "project_page": "https://github.com/jlyheden/puppet-pam",
+  "issues_url": "https://github.com/jlyheden/puppet-pam/issues",
+  "tags": ["pam"],
+  "operatingsystem_support": [
+    {
+    "operatingsystem":"Debian",
+    "operatingsystemrelease":[ "8.0" ]
+    },
+    {
+    "operatingsystem": "Ubuntu",
+    "operatingsystemrelease": [ "12.04" ]
+    }
+   ],
+  "dependencies": [
+    { "name": "puppetlabs/stdlib", "version_requirement": ">=2.6.0" },
+    { "name": "ripienaar/concat", "version_requirement": ">= 0.2.0" }
+  ]
+}
