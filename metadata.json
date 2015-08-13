@@ -1,6 +1,6 @@
 {
-  "name": "jlyheden-pam",
-  "version": "0.0.4",
+  "name": "jpl-pam",
+  "version": "0.1.0",
   "author": "Johan Lyheden",
   "license": "Apache-2.0",
   "summary": "A Puppet module for managing PAM",
