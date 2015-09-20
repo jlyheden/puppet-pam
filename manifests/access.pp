@@ -214,7 +214,7 @@ class pam::access (
             object      => 'ALL',
             object_type => 'ALL',
             permission  => 'deny',
-            priority    => 90,
+            priority    => '90',
             except_user => 'root'
           }
         }
