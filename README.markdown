@@ -5,7 +5,7 @@ This is the Puppet module for managing PAM - Pluggable Authentication Module.
 
 ## Dependencies
 
-* puppet-concat: https://github.com/ripienaar/puppet-concat
+* puppet-concat: https://github.com/puppetlabs/puppet-concat
 * puppet-stdlib: https://github.com/puppetlabs/puppetlabs-stdlib
 
 ### Usage: pam
