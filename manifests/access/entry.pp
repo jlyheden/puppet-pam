@@ -10,10 +10,6 @@
 #   Name of object to manage access to
 #   Valid values: <tt>username</tt>, <tt>groupname</tt>, <tt>ALL</tt>
 #
-# [*ensure*]
-#   Controls the resource definition
-#   Valid values: <tt>present</tt>, <tt>absent</tt>
-#
 # [*object_type*]
 #   Specifies user or group entry
 #   Valid values: <tt>user</tt>, <tt>group</tt>
@@ -110,12 +106,13 @@ define pam::access::entry (
   # Virtual resource, pam::access will realize it
   # unless access.conf file is managed entirely
   # by template file or source file
-  @concat::fragment { $name_real:
-    ensure  => $ensure,
-    target  => $pam::access::accessfile_real,
-    content => $content_real,
-    order   => $priority,
-    tag     => 'pam_access'
+  if $ensure == 'present' {
+    @concat::fragment { $name_real:
+      target  => $pam::access::accessfile_real,
+      content => $content_real,
+      order   => $priority,
+      tag     => 'pam_access'
+    }
   }
 
 }
