@@ -10,6 +10,11 @@
 #   Name of object to manage access to
 #   Valid values: <tt>username</tt>, <tt>groupname</tt>, <tt>ALL</tt>
 #
+# [*ensure*]
+#   Controls the resource definition
+#   Valid values: <tt>present</tt>, <tt>absent</tt>
+#
+#
 # [*object_type*]
 #   Specifies user or group entry
 #   Valid values: <tt>user</tt>, <tt>group</tt>
